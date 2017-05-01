@@ -3,18 +3,20 @@
 @section('content')
 <div id="page_content_inner">
 
-    <h4 class="heading_a uk-margin-bottom">Show/hide columns</h4>
+    <h4 class="heading_a uk-margin-bottom">Cards</h4>
     <div class="md-card uk-margin-medium-bottom">
         <div class="md-card-content">
-            <table id="dt_colVis" class="uk-table" cellspacing="0" width="100%">
+            <table id="table_user_cards" class="uk-table" cellspacing="0" width="100%">
                 <thead>
                     <tr>
                         <th>Sl No</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Status</th>
-                        <th>Created at</th>
-                        <th>Actions</th>
+                        <th>Card</th>
+                        <th>Type</th>
+                        <th>Number</th>
+                        <th>Limit</th>
+                        <th>Bill Date</th>
+                        <th>Payment Date</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -26,7 +28,7 @@
 </div>
 
 <div class="md-fab-wrapper">
-    <a class="md-fab md-fab-accent" href="#card_model" data-uk-modal="{ center:true }">
+    <a class="md-fab md-fab-accent" href="javascript:void(0)" onclick="addCardForm()">
         <i class="material-icons">&#xE145;</i>
     </a>
 </div>
@@ -41,7 +43,7 @@
                 <div class="uk-width-medium-1-1">
                     <div class="parsley-row">
                         <label for="card_name">Card Name<span class="req">*</span></label>
-                        <input type="text" name="card_name" required class="md-input" />
+                        <input type="text" name="card_name" id="card_name" required class="md-input label-fixed" />
                     </div>
                 </div>
             </div>
@@ -49,13 +51,13 @@
                 <div class="uk-width-medium-1-2">
                     <div class="parsley-row">
                         <label for="card_number">Card Number<span class="req">*</span></label>
-                        <input type="text" name="card_number" required  class="md-input" />
+                        <input type="text" name="card_number" id="card_number" required  class="md-input label-fixed" />
                     </div>
                 </div>
                 <div class="uk-width-medium-1-2">
                     <div class="parsley-row">
                         <label for="card_name">Card Limit<span class="req">*</span></label>
-                        <input type="text" name="card_limit" required class="md-input" />
+                        <input type="text" name="card_limit" id="card_limit" required class="md-input label-fixed" />
                     </div>
                 </div>
             </div>
@@ -63,13 +65,13 @@
                 <div class="uk-width-medium-1-2">
                     <div class="parsley-row uk-margin-top">
                         <label for="val_birth">Bill Date<span class="req">*</span></label>
-                        <input type="text" name="bill_date" id="val_birth" required class="md-input" data-parsley-americandate data-parsley-americandate-message="This value should be a valid date (YYYY-MM-DD)" data-uk-datepicker="{format:'YYYY-MM-DD'}" />
+                        <input type="text" name="bill_date" id="bill_date" required class="md-input label-fixed" data-parsley-americandate data-parsley-americandate-message="This value should be a valid date (YYYY-MM-DD)" data-uk-datepicker="{format:'YYYY-MM-DD'}" />
                     </div>
                 </div>
                 <div class="uk-width-medium-1-2">
                     <div class="parsley-row uk-margin-top">
                         <label for="val_birth">Payment Date<span class="req">*</span></label>
-                        <input type="text" name="payment_date" id="val_birth" required class="md-input" data-parsley-americandate data-parsley-americandate-message="This value should be a valid date (YYYY-MM-DD)" data-uk-datepicker="{format:'YYYY-MM-DD'}" />
+                        <input type="text" name="payment_date" id="payment_date" required class="md-input label-fixed" data-parsley-americandate data-parsley-americandate-message="This value should be a valid date (YYYY-MM-DD)" data-uk-datepicker="{format:'YYYY-MM-DD'}" />
                     </div>
                 </div>
             </div>
@@ -77,7 +79,7 @@
                 <div class="uk-width-medium-1-2">
                     <div class="parsley-row">
                         <label for="card_type" class="uk-form-label">Card Type</label>
-                        <select id="card_type" name="card_type" required data-md-selectize>
+                        <select id="card_type" name="card_type" required>
                             <option value="">Choose..</option>
                             <option value="1">Visa</option>
                             <option value="2">Master</option>
@@ -88,7 +90,7 @@
                 <div class="uk-width-medium-1-2">
                     <div class="parsley-row">
                         <label for="bank" class="uk-form-label">Bank</label>
-                        <select id="bank" name="bank" required data-md-selectize>
+                        <select id="bank" name="bank" required>
                             <option value="">Choose..</option>
                             <option value="1">SBI</option>
                             <option value="2">SCB</option>
@@ -125,7 +127,7 @@
 <script>
 $(function() {
     // datatables
-    altair_datatables.dt_colVis();
+    altair_datatables.table_user_cards();
     altair_form_validation.init();
 });
 
@@ -148,8 +150,8 @@ altair_form_validation = {
 
 altair_datatables = {
 
-    dt_colVis: function() {
-        var $dt_colVis = $('#dt_colVis');
+    table_user_cards: function() {
+        var $dt_colVis = $('#table_user_cards');
         if ($dt_colVis.length) {
 
             // init datatables
@@ -158,7 +160,7 @@ altair_datatables = {
                 "serverSide": true,
                 "ordering": false,
                 "ajax": {
-                    "url": '{!! URL::to("users/getUsers") !!}',
+                    "url": '{!! URL::to("cards/getCards") !!}',
                     "type": "POST",
                     "data": function(data) {
                         data._token = "{{{ csrf_token() }}}";
@@ -166,24 +168,15 @@ altair_datatables = {
                     }
                 },
                 "AutoWidth": false,
-                "columns": [{
-                        "data": "id"
-                    },
-                    {
-                        "data": "name"
-                    },
-                    {
-                        "data": "email"
-                    },
-                    {
-                        "data": "status"
-                    },
-                    {
-                        "data": "created_at"
-                    },
-                    {
-                        "data": "id"
-                    }
+                "columns": [
+                    {"data": "id"},
+                    {"data": "card_name"},
+                    {"data": "card_type"},
+                    {"data": "card_number"},
+                    {"data": "card_limit"},
+                    {"data": "bill_date"},
+                    {"data": "payment_date"},
+                    {"data": "id"},
                 ],
                 "fnCreatedRow": function(nRow, aData, iDataIndex) {
                     $('td:eq(0)', nRow).html(iDataIndex + 1);
@@ -192,9 +185,9 @@ altair_datatables = {
                     } else {
                         var status = '<span class="uk-badge uk-badge-danger">Inactive</span>';
                     }
-                    $('td:eq(3)', nRow).html(status);
-                    $('td:eq(5)', nRow).html('<a onclick="editUser(' + aData.id + ')" href="#new_issue" data-uk-modal="{ center:true }"><i class="material-icons">mode_edit</i></a>\n\
-                                                <a href="#" onclick="deleteUser(' + aData.id + ')"><i class="material-icons">delete</i></a>');
+//                    $('td:eq(3)', nRow).html(status);
+                    $('td:eq(7)', nRow).html('<a onclick="editCard(' + aData.id + ')" href="#new_issue" data-uk-modal="{ center:true }"><i class="material-icons">mode_edit</i></a>\n\
+                                                <a href="#" onclick="deleteCard(' + aData.id + ')"><i class="material-icons">delete</i></a>');
                 }
             });
 
@@ -270,6 +263,13 @@ altair_datatables = {
     }
 };
 
+function addCardForm(){
+    $('select').attr('data-md-selectize','');
+    $('#card_model input').val('');
+    UIkit.modal("#card_model").show();
+    altair_forms.select_elements();
+}
+
 function saveCard() {
     $('#card_form').parsley().validate();
     if ($('#card_form').parsley().isValid()) {
@@ -280,15 +280,16 @@ function saveCard() {
             data: $('#card_form').serialize(),
             success: function(data) {
                 UIkit.modal("#card_model").hide();
+                $('#table_user_cards').DataTable().ajax.reload(null, false);
                 UIkit.notify(data.msg, {pos:'top-right',status:'success'});
             }
         });
     }
 }
 
-function editUser(id) {
+function editCard(id) {
     $.ajax({
-        url: "{{URL::to('users/getUserDetails')}}",
+        url: "{{URL::to('cards/getCardDetails')}}",
         method: "POST",
         type: "json",
         data: {
@@ -296,6 +297,17 @@ function editUser(id) {
             _token: "{!!csrf_token()!!}"
         },
         success: function(data) {
+            $('#bank').attr('data-md-selectize','');
+            $('#card_type').attr('data-md-selectize','');
+            $('#bank').val(data.result.bank_id);
+            $('#card_type').val(data.result.card_type_id);
+            $('#card_name').val(data.result.card_name);
+            $('#card_number').val(data.result.card_number);
+            $('#card_limit').val(data.result.card_limit);
+            $('#bill_date').val(data.result.bill_date);
+            $('#payment_date').val(data.result.payment_date);
+            
+            UIkit.modal("#card_model").show();
             altair_forms.select_elements();
         }
     });
@@ -303,7 +315,7 @@ function editUser(id) {
 
 function updateUser() {
     $.ajax({
-        url: "{{URL::to('users/updateUserDetails')}}",
+        url: "{{URL::to('cards/updateCardDetails')}}",
         method: "POST",
         type: "json",
         data: $('#userData').serialize(),
@@ -313,13 +325,13 @@ function updateUser() {
                 status: 'success'
             });
             UIkit.modal("#new_issue").hide();
-            users_table.ajax.reload();
+            $('#table_user_cards').DataTable().ajax.reload(null, false);
         }
     });
 
 }
 
-function deleteUser(id) {
+function deleteCard(id) {
     UIkit.modal.confirm('Are you sure?', function() {
 
     });

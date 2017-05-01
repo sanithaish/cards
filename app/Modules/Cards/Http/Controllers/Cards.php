@@ -49,6 +49,7 @@ class Cards extends Controller {
             'payment_date' => Input::get('payment_date'),
             'card_type_id' => Input::get('card_type'),
             'bank_id' => Input::get('bank'),
+            'user_id' => Auth::user()->id
         ];
         $rules = [
             'card_name' => 'required',
@@ -78,13 +79,44 @@ class Cards extends Controller {
         $limit = (Input::get('length') != '') ? Input::get('length') : 10;
         $offset = (Input::get('start') != '') ? Input::get('start') : 0;
         $search = Input::get('search')['value'];
-        $query = User_cards::select('user_cards.card_name', 'user_cards.card_number', 'user_list.status')
+        $query = User_cards::select('user_cards.id', 'user_cards.card_name', 'user_cards.card_number', 'user_cards.card_limit', 'user_cards.status',
+                'user_cards.bill_date', 'user_cards.payment_date', 'card_types.card_type')
                 ->leftJoin('card_types', 'card_types.id', '=', 'user_cards.card_type_id')
                 ->where('user_id', Auth::user()->id);
         $count = $query->count();
         $data = $query->skip($offset)->take($limit)->get();
         $result = ["iTotalDisplayRecords" => $count, 'data' => $data, "iTotalRecords" => $limit, "TotalDisplayRecords" => $limit];
         return response()->json($result);
+    }
+    
+    /*
+     * @function: getCardDetails
+     * Get card details
+     *
+     * @param
+     * null
+     *
+     * @return
+     * json 
+     */
+
+    public function getCardDetails() {
+
+        $data = [
+            'id' => Input::get('id'),
+            'user_id' => Auth::user()->id
+        ];
+        $rules = [
+//            'id' => 'required',
+//            'user_id' => 'required',
+        ];
+        $validator = Validator::make($data, $rules);
+        if ($validator->fails()) {
+            return response()->json(['status' => 0, 'msg' => implode('<br>', Core::errorMsg($validator))]);
+        } else {
+            $card_details = User_cards::select()->where($data)->first();
+            return response()->json(['status' => 1, 'result' => $card_details]);
+        }
     }
 
 }
