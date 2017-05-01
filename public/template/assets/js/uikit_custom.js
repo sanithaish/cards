@@ -2756,7 +2756,7 @@
 
         var modal = UI.modal.dialog(([
             '<div class="uk-margin uk-modal-content">'+String(content)+'</div>',
-            '<div class="uk-modal-footer uk-text-right"><button class="uk-button js-modal-confirm-cancel">'+options.labels.Cancel+'</button> <button class="uk-button uk-button-primary js-modal-confirm">'+options.labels.Ok+'</button></div>'
+            '<div class="uk-modal-footer uk-text-right"><button class="md-btn md-btn-wave waves-effect waves-button js-modal-confirm-cancel">'+options.labels.Cancel+'</button> <button class="md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light js-modal-confirm">'+options.labels.Ok+'</button></div>'
         ]).join(""), options);
 
         modal.element.find(".js-modal-confirm, .js-modal-confirm-cancel").on("click", function(){

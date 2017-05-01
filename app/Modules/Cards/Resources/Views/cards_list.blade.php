@@ -36,7 +36,7 @@
 <div class="uk-modal" id="card_model">
     <div class="uk-modal-dialog" id="modelContent">
         <div class="uk-modal-header">
-            <h3 class="uk-modal-title">Headline</h3>
+            <h3 class="uk-modal-title">Card</h3>
         </div>
         {!! Form::open(array('url'=>'','class'=>'uk-form-stacked','id'=>'card_form')) !!}
             <div class="uk-grid" data-uk-grid-margin>
@@ -101,7 +101,8 @@
                 </div>
             </div>
             <div class="uk-modal-footer uk-text-right">
-                <button type="button" class="md-btn md-btn-flat uk-modal-close">Close</button><button type="button" onclick="saveCard()" class="md-btn md-btn-flat md-btn-flat-primary">Action</button>
+                <button type="button" class="md-btn md-btn-wave waves-effect waves-button uk-modal-close">Close</button>
+                <button type="button" onclick="saveCard()" class="md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light">Action</button>
             </div>
         {!! Form::close() !!}
     </div>
